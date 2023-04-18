@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Port Statuses</title>
+</head>
+<body>
+    <h1>Port Statuses</h1>
+    <table>
+        <tr>
+            <th>Port</th>
+            <th>Status</th>
+        </tr>
+        {% for port, status in statuses.items() %}
+        <tr>
+            <td>{{ port }}</td>
+            <td>{{ status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <form method="POST">
+        <label for="port">Enter port number to turn on:</label>
+        <input type="text" id="port" name="port" required><br><br>
+        <input type="submit" value="Turn">
+    </form>
+</body>
+</html>
