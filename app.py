@@ -15,7 +15,7 @@ device = {
 def get_port_statuses():
     with ConnectHandler(**device) as conn:
         # Send the "show interface" command and get the output
-        output = conn.send_command("show interfaces")
+        output = conn.send_command("show interface brief")
         # Parse the output to find the port statuses
         statuses = {}
         port = ""
