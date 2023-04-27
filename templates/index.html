@@ -2,11 +2,13 @@
 <html>
 <head>
     <title>Port Statuses</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
 </head>
 <body>
-        <h1 class="text-blue-600">Port Statuses</h1>
-        <table>
+    <div class="topnav">
+        <h1>Port Statuses</h1>
+    </div>
+        <table id="results">
             <tr>
                 <th>Port</th>
                 <th>Status</th>
@@ -20,8 +22,8 @@
         </table>
         <br>
         <form method="POST">
-            <label for="port">Enter port number to turn on:</label>
-            <input type="text" id="port" name="port" required><br><br>
+            <label class="center" for="port">Enter port:</label>
+            <input type="text" id="port" placeholder="G" name="port" required><br><br>
             <input type="submit" value="Turn">
         </form>
 </body>
