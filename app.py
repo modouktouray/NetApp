@@ -11,10 +11,10 @@ device = {
     'password': 'Moic1@GM'
 }
 
-account_sid = "AC516de1b35de4f13bd5d3f1e65ec40785"
-auth_token = "7200b102526e918c307faff56e69b8ea"
-from_number = "+16076382857"
-to_number = "+2203304726"
+account_sid = ""
+auth_token = ""
+from_number = ""
+to_number = ""
 
 client = Client(account_sid, auth_token)
 
