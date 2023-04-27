@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 from netmiko import ConnectHandler
+from twilio.rest import Client
 
 app = Flask(__name__)
 
-# Define the credentials and IP address of the switch
 device = {
     'device_type': 'cisco_ios',
     'ip': '10.217.4.5',
@@ -11,22 +11,35 @@ device = {
     'password': 'Moic1@GM'
 }
 
-# Define a function to get the status of all ports
+account_sid = "AC516de1b35de4f13bd5d3f1e65ec40785"
+auth_token = "7200b102526e918c307faff56e69b8ea"
+from_number = "+16076382857"
+to_number = "+2203304726"
+
+client = Client(account_sid, auth_token)
+
+
 def get_port_statuses():
     with ConnectHandler(**device) as conn:
-        # Send the "show interface" command and get the output
-        output = conn.send_command("show interface brief")
-        # Parse the output to find the port statuses
+        output = conn.send_command("show interface")
         statuses = {}
         port = ""
         for line in output.splitlines():
+            # if line.startswith("Gi") and "notconnect" in line:
+            #     message = client.messages.create(
+            #         body="Port " + line.split()[0] + " is down on ",
+            #         from_=from_number,
+            #         to=to_number
+            #     )
+            #     print("Sent message:", message.sid)
+            
             if "line protocol is" in line:
                 port = line.split()[0]
                 status = line.split()[-1]
                 statuses[port] = status
         return statuses
+    time.sleep(300)
 
-# Define a function to turn on a port
 def turn_on_port(port):
     with ConnectHandler(**device) as conn:
         # Send the command to turn on the port
@@ -34,20 +47,14 @@ def turn_on_port(port):
         conn.send_command(f"interface {port}")
         conn.send_command(f"no shutdown")
 
-# Define a route to display the port statuses and input form
 @app.route("/")
 def index():
-    # Get the port statuses
     statuses = get_port_statuses()
-    # Render the template with the statuses
     return render_template("index.html", statuses=statuses)
 
-# Define a route to handle the input form
 @app.route("/", methods=["POST"])
 def input():
-    # Get the port number from the form input
     port = request.form["port"]
-    # Turn on the port if it is down
     statuses = get_port_statuses()
     if statuses[port] == "down":
         turn_on_port(port)
