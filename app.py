@@ -11,12 +11,12 @@ device = {
     'password': 'Moic1@GM'
 }
 
-account_sid = ""
-auth_token = ""
-from_number = ""
-to_number = ""
+# account_sid = ""
+# auth_token = ""
+# from_number = ""
+# to_number = ""
 
-client = Client(account_sid, auth_token)
+# client = Client(account_sid, auth_token)
 
 
 def get_port_statuses():

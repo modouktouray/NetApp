@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Port Statuses</title>
+    <title>Switch Port Statuses</title>
     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
 </head>
 <body>
     <div class="topnav">
-        <h1>Port Statuses</h1>
+        <h1>Switch Port Statuses</h1>
+        <label for="country">Please select a switch</label>
+        <select id="country" name="country">
+          <option value="australia">Core switch</option>
+          <option value="australia">4th Floor switch</option>
+          <option value="canada">5th Floor Switch</option>
+          <option value="usa">6th Floor switch</option>
+        </select>
+
+        <form method="POST">
+            <label class="center" for="port">Enter port:</label>
+            <input type="text" id="port" placeholder="GigabitEthernet1/0/52" name="port" required><br><br>
+            <input type="submit" value="Turn">
+        </form>
     </div>
         <table id="results">
             <tr>
@@ -20,11 +33,5 @@
             </tr>
             {% endfor %}
         </table>
-        <br>
-        <form method="POST">
-            <label class="center" for="port">Enter port:</label>
-            <input type="text" id="port" placeholder="GigabitEthernet1/0/52" name="port" required><br><br>
-            <input type="submit" value="Turn">
-        </form>
 </body>
 </html>

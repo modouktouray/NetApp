@@ -1,7 +1,6 @@
 .topnav {
     overflow: hidden;
     background-color: #04AA6D;
-    text-align: center;
     color: white;
     margin-bottom: 2%;
   }
@@ -41,8 +40,20 @@ display: block;
 margin-right: auto;
 margin-left: auto;
 }
+input[type=text], select{
+  width: 35%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  }
 input[type=submit] {
-    width: 50%;
+    width: 35%;
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -55,3 +66,6 @@ input[type=submit] {
     margin-right: auto;
     margin-left: auto;
   }
+.center{
+  margin-left: 190px;
+}
