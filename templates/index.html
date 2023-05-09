@@ -7,31 +7,34 @@
 <body>
     <div class="topnav">
         <h1>Switch Port Statuses</h1>
-        <label for="country">Please select a switch</label>
-        <select id="country" name="country">
-          <option value="australia">Core switch</option>
-          <option value="australia">4th Floor switch</option>
-          <option value="canada">5th Floor Switch</option>
-          <option value="usa">6th Floor switch</option>
-        </select>
-
-        <form method="POST">
-            <label class="center" for="port">Enter port:</label>
+        <form class="form1" method="POST">
+            <label for="country">Please select a switch</label>
+            <select name="switch" id="switch">
+                {% for switch in switch_options %}
+                <option value="{{ switch }}">{{ switch }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Connect">
+        </form>
+        <form class="form2" method="POST">
+            <label for="port">Enter port:</label>
             <input type="text" id="port" placeholder="GigabitEthernet1/0/52" name="port" required><br><br>
             <input type="submit" value="Turn">
         </form>
     </div>
+        {% if statuses %}
         <table id="results">
             <tr>
                 <th>Port</th>
                 <th>Status</th>
             </tr>
-            {% for port, status in statuses.items() %}
-            <tr>
-                <td>{{ port }}</td>
-                <td>{{ status }}</td>
-            </tr>
-            {% endfor %}
+                {% for port, status in statuses.items() %}
+                <tr>
+                    <td>{{ port }}</td>
+                    <td>{{ status }}</td>
+                </tr>
+                {% endfor %}
         </table>
+        {% endif %}
 </body>
 </html>
