@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <!-- Favicon -->
+        <link
+        rel="shortcut icon"
+        href="{{ url_for('static', filename='img/favicon.ico') }}"/>
+      <!-- Bootstrap 3.3.7 -->
+      <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/bootstrap.css') }}"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"
+      />
+    <title>Switch Port Statuses</title>
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}"> -->
+    {% extends "bootstrap/base.html" %}
+    {% block head %}
+        {{ super() }}
+    {% endblock %}
+
+</head>
+{% block body %}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <img class="navbar-brand" src="static/img/cli.png"></img>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+           <ul class="navbar-nav mr-auto">
+              <li class="text-white font-weight-bold">
+                 Switch Port Statues
+              </li>
+           </ul>
+        </div>
+      </nav>
+    <div class="container-fluid bg-light">
+        <div class="row">
+        {% if statuses %}
+        <div class="container">
+            <section class="content">
+                <div class="col-md-4">
+                    <h1>{{first_value}}</h1>
+                  </div>
+                  <div class="col-md-4 mt-3">
+                    <form method="POST" action="">
+                      <div class="form-row">
+                        <div class="form-group col-md-6 my-2">
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="GigabitEthernet1/0/3"
+                            name="port"
+                            required
+                          />
+                        </div>
+                        <div class="form-group col-md-4 my-2">
+                          <button type="submit" class="btn btn-primary col">
+                            Turn on Port
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+              <table
+                class="table table-responsive-sm table-bordered table-hover mt-5"
+              >
+                <thead class="thead-light">
+                    <tr>
+                        <th>Port</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for port, status in statuses.items() %}
+                  <tr>
+                    <tr>
+                        <td>{{ port }}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </section>
+          </div>
+        {% endif %}
+        <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+</body>
+{% endblock %}
+</html>

@@ -34,23 +34,22 @@ bootstrap = Bootstrap(app)
 
 # decrypt_file('credentials.txt', key)
 
-# switch_credentials = {}
-
-# with open('credentials.txt', 'r') as file:
-#     for line in file:
-#         switch_name, ip, username, password = line.strip().split(',')
-#         switch_credentials[switch_name] = {
-#             'ip': ip,
-#             'username': username,
-#             'password': password
-#         }
 # account_sid = ""
 # auth_token = ""
 # from_number = ""
 # to_number = ""
 
 # client = Client(account_sid, auth_token)
-
+@app.route("/")
+def get_credentials():
+    switch_credentials = []
+    with open('credentials.txt', 'r') as f:
+        for line in f:
+            switch_info = line.strip().split(',')
+            switch_ip = switch_info[1]
+            switch_credentials.append(switch_ip)
+    return render_template('index.html', switch_credentials=switch_credentials)
+          
 def connect(device_type,ip,username,password,port):
         device = {
 		'device_type': device_type,
@@ -60,45 +59,34 @@ def connect(device_type,ip,username,password,port):
 		'port': port
 		}
         return ConnectHandler(**device)    
-
-@app.route("/", methods=["POST", "GET"])
-def get_port_statuses():
-    if request.method == 'POST':
-        result = request.form.to_dict()
-        device = connect('cisco_ios', result['hostname'], result['username'], result['password'] , result['port'])
-        output = device.send_command("show interface")
-        statuses = {}
-        port = ""
-        for line in output.splitlines():
-            if "line protocol is" in line:
-                port = line.split()[0]
-                status = line.split()[-1]
-                statuses[port] = status
-        return render_template("index.html", statuses=statuses)
-    else:
-	    return render_template('index.html')
-
-# def turn_on_port(port):
     
-#         # Send the command to turn on the port
-#     device = connect('cisco_ios', result['hostname'], result['username'], result['password'] , result['port'])
-#     port = request.form["port"]
-#     config_commands = ['interface ' + port, 'no shutdown']
-#     output = net_connect.send_config_set(config_commands)
-
-# @app.route("/")
-# def index():
-#     switch_options = switch_credentials.keys()
-#     return render_template("index.html",switch_options=switch_options)
-
-# @app.route("/", methods=["POST"])
-# def input():
-#     statuses = get_port_statuses()
-#     if statuses[port] == "notconnect":
-#         turn_on_port(port)
-#         return f"Port {port} was down and has been turned on"
-#     else:
-#         return f"Port {port} is already on"
+#Turning the port on
+def turn_on_port():
+    interface_name = request.form["port"]
+    if interface_name:
+        command = f'interface {interface_name}\nno shutdown\n'
+        output = device.send_config_set(command)
+        
+#geting the ports info
+@app.route("/switchinfo", methods=["POST", "GET"])
+def get_port_statuses():
+        if request.method == 'POST':
+            #connecting to the device
+            result = request.form.to_dict()
+            device = connect('cisco_ios', result['ip'] , result['username'], result['password'] , result['port'])
+            first_value = next(iter(result.values()))
+            output = device.send_command("show interface")
+            statuses = {}
+            port = ""
+            for line in output.splitlines():
+                if "line protocol is" in line:
+                    port = line.split()[0]
+                    status = line.split()[-1]
+                    statuses[port] = status
+            return render_template("switch_info.html", statuses=statuses, first_value=first_value)
+        else:
+            return render_template('index.html')
+ 
 
 if __name__ == "__main__":
     app.run()

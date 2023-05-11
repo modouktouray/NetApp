@@ -2,10 +2,9 @@
 <html>
 <head>
         <!-- Favicon -->
-        <link
+      <link
         rel="shortcut icon"
-        href="{{ url_for('static', filename='img/favicon.ico') }}"
-      />
+        href="{{ url_for('static', filename='img/favicon.ico') }}"/>
       <!-- Bootstrap 3.3.7 -->
       <link
         rel="stylesheet"
@@ -28,19 +27,17 @@
     <div class="container-fluid bg-light">
         <div class="row">
           <div class="col-md-4">
-            <h1>Port Statuses</h1>
+            <h1>Check switch info</h1>
           </div>
           <div class="col-md-8">
-            <form class="float-right" method="POST" action=" ">
+            <form class="float-right" method="POST" action="/switchinfo">
               <div class="form-row">
                 <div class="form-group col-md-3 my-2">
-                  <input
-                    type="Hostname"
-                    class="form-control"
-                    placeholder="Hostname"
-                    name="hostname"
-                    required
-                  />
+                  <select class="form-control" name="ip">
+                      {% for value in switch_credentials %}
+                      <option id="ip" value='{{value}}' name="ip">{{value}}</option>
+                      {% endfor %}
+                  </select>
                 </div>
                 <div class="form-group col-md-1 my-2">
                   <input
@@ -80,26 +77,6 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 mt-3">
-        <form method="POST" action=" ">
-          <div class="form-row">
-            <div class="form-group col-md-6 my-2">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="GigabitEthernet1/0/3"
-                name="port"
-                required
-              />
-            </div>
-            <div class="form-group col-md-4 my-2">
-              <button type="submit" class="btn btn-primary col">
-                Turn on Port
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
         {% if statuses %}
         <div class="container">
             <section class="content">
