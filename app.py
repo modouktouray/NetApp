@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask,session, render_template, request, redirect, url_for, flash
 from netmiko import ConnectHandler
 from twilio.rest import Client
 from cryptography.fernet import Fernet
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+app.secret_key = '2299280'
 bootstrap = Bootstrap(app)
 
 
@@ -59,31 +60,53 @@ def connect(device_type,ip,username,password,port):
 		'port': port
 		}
         return ConnectHandler(**device)    
+
+def get_port_statuses():
+    result = request.form.to_dict()
+    session['result'] = result
+    device = connect('cisco_ios', result['ip'] , result['username'], result['password'] , result['port'])
+    output = device.send_command("show interface")
+    statuses = {}
+    port = ""
+    for line in output.splitlines():
+        if "line protocol is" in line:
+            port = line.split()[0]
+            status = line.split()[-1]
+            statuses[port] = status
+    return statuses
     
 #Turning the port on
+@app.route("/portinfo", methods=["POST"])
 def turn_on_port():
-    interface_name = request.form["port"]
-    if interface_name:
-        command = f'interface {interface_name}\nno shutdown\n'
-        output = device.send_config_set(command)
+    if request.method == 'POST':
+        result = session['result']
+        device = connect('cisco_ios', result['ip'] , result['username'], result['password'] , result['port'])
+        output = device.send_command("show interface")
+        statuses = {}
+        port = ""
+        for line in output.splitlines():
+            if "line protocol is" in line:
+                port = line.split()[0]
+                status = line.split()[-1]
+                statuses[port] = status
+        port = request.form["interface"]
+        # Turn on the port if it is down
+        if statuses[port] == "down":
+            turn_on_port(port)
+            flash('Port was successfully turn on')
+            return render_template("switchinfo.html", result=result, statuses=statuses)
+        else:
+            flash('Port is already on')
+            return render_template("switchinfo.html", result=result, statuses=statuses)
+    
         
 #geting the ports info
 @app.route("/switchinfo", methods=["POST", "GET"])
-def get_port_statuses():
+def switchinfo():
         if request.method == 'POST':
-            #connecting to the device
             result = request.form.to_dict()
-            device = connect('cisco_ios', result['ip'] , result['username'], result['password'] , result['port'])
-            first_value = next(iter(result.values()))
-            output = device.send_command("show interface")
-            statuses = {}
-            port = ""
-            for line in output.splitlines():
-                if "line protocol is" in line:
-                    port = line.split()[0]
-                    status = line.split()[-1]
-                    statuses[port] = status
-            return render_template("switch_info.html", statuses=statuses, first_value=first_value)
+            statuses = get_port_statuses()
+            return render_template("switchinfo.html", statuses=statuses, result=result)
         else:
             return render_template('index.html')
  

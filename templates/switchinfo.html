@@ -34,23 +34,36 @@
            </ul>
         </div>
       </nav>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container">
+          {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+
     <div class="container-fluid bg-light">
         <div class="row">
         {% if statuses %}
         <div class="container">
             <section class="content">
                 <div class="col-md-4">
-                    <h1>{{first_value}}</h1>
+                    <h1>{{result.ip}}</h1>
                   </div>
                   <div class="col-md-4 mt-3">
-                    <form method="POST" action="">
+                    <form method="POST" action="/portinfo">
                       <div class="form-row">
                         <div class="form-group col-md-6 my-2">
                           <input
                             type="text"
                             class="form-control"
                             placeholder="GigabitEthernet1/0/3"
-                            name="port"
+                            name="interface"
                             required
                           />
                         </div>
