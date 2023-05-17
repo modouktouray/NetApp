@@ -89,14 +89,18 @@ def turn_on_port():
                 port = line.split()[0]
                 status = line.split()[-1]
                 statuses[port] = status
+        print(statuses)
         port = request.form["interface"]
         # Turn on the port if it is down
-        if statuses[port] == "down":
+        if statuses[port] == "notconnect":
             turn_on_port(port)
-            flash('Port was successfully turn on')
+            flash(('Port was successfully turn on', 'success'))
+            return render_template("switchinfo.html", result=result, statuses=statuses)
+        elif statuses[port] == "disabled":
+            flash(('This port is disabled', 'error'))
             return render_template("switchinfo.html", result=result, statuses=statuses)
         else:
-            flash('Port is already on')
+            flash(('Port is already on','error'))
             return render_template("switchinfo.html", result=result, statuses=statuses)
     
         

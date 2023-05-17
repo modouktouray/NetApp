@@ -1,0 +1,13 @@
+.flash-messages {
+    list-style-type: none;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .flash-success {
+    color: green;
+  }
+  
+  .flash-error {
+    color: red;
+  }
