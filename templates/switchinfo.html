@@ -42,8 +42,6 @@
           {% for message, category in messages %}
             {% if category == 'success' %}
               <li class="alert alert-success flash-success">{{ message }}</li>
-            {% elif category == 'error' %}
-              <li class="alert alert-danger flash-error">{{ message }}</li>
             {% else%}
               <li class="alert alert-danger flash-error">{{ message }}</li>
             {% endif %}

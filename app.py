@@ -96,9 +96,6 @@ def turn_on_port():
             turn_on_port(port)
             flash(('Port was successfully turn on', 'success'))
             return render_template("switchinfo.html", result=result, statuses=statuses)
-        elif statuses[port] == "disabled":
-            flash(('This port is disabled', 'error'))
-            return render_template("switchinfo.html", result=result, statuses=statuses)
         else:
             flash(('Port is already on','error'))
             return render_template("switchinfo.html", result=result, statuses=statuses)
